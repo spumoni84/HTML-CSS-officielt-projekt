@@ -37,6 +37,7 @@ nav ul li a {
 
 main {
     padding: 1em;
+    padding-bottom: 5em; /* Add padding to the bottom to prevent content from being hidden behind the footer */
 }
 
 #search-bar {
@@ -44,7 +45,6 @@ main {
     justify-content: center;
     align-items: center;
     margin-bottom: 1em;
-    gap: 0.5em;
 }
 
 #search-bar input {
@@ -72,14 +72,10 @@ main {
     background-color: #555;
 }
 
-#search-bar .fa-heart, #search-bar .fa-shopping-basket {
+.search-icon {
+    margin-left: 10px;
     font-size: 1.5em;
-    color: #333;
     cursor: pointer;
-}
-
-#search-bar .fa-heart:hover, #search-bar .fa-shopping-basket:hover {
-    color: #555;
 }
 
 #hero {
@@ -111,11 +107,31 @@ main {
     border: 1px solid #ccc;
     padding: 1em;
     text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
 .product img {
-    max-width: 100%;
-    height: auto;
+    width: 200px; /* Fixed width */
+    height: 200px; /* Fixed height */
+    object-fit: cover; /* Ensure the image covers the area */
+}
+
+.product-details {
+    text-align: left;
+    padding: 0.5em 0;
+    width: 100%;
+}
+
+.product-details h3 {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.product-details h3 i {
+    cursor: pointer;
 }
 
 footer {
