@@ -335,7 +335,6 @@ header {
 
 .accordion-column ul li {
     margin: 20px 0;
-    animation: bounce 2s infinite; /* Apply bounce animation to list items */
 }
 
 .accordion-column ul li a {
@@ -367,7 +366,6 @@ header {
     background-color: #f7f7f7;
     font-size: 1em;
     color: #333;
-    animation: bounce 2s infinite; /* Apply bounce animation */
 }
 
 /* Example of applying bounce animation to a button */
@@ -382,6 +380,11 @@ header {
 }
 
 .accordion-lg {
+    display: none;
+}
+
+/* Hide the Categories link by default */
+.categories-lg {
     display: none;
 }
 
@@ -434,7 +437,7 @@ header {
         position:absolute;
         z-index: 10;
         top: 118px;
-        right: 330px;
+        right: 320px;
         display: flex;
         align-items: center;
         margin-left: auto;
@@ -518,7 +521,7 @@ header {
     .new-overlay {
         position: absolute;
         z-index: 10;
-        top: 60px;
+        top: 40px;
         left: 20px;
     }
 
@@ -541,11 +544,14 @@ header {
         display: flex;
         align-items: center;
         font-size: 16px;
+        margin-left: 60px;
     }
 
     .feature-icon i {
+        text-align: center;
+        align-items: center;
         margin-right: 10px;
-        font-size: 20px;
+        font-size: 28px;
     }
 
     .footer {
@@ -687,8 +693,8 @@ header {
     .heart-overlay {
         position: absolute;
         z-index: 10;
-        top: 70%;
-        left: 82.5%;
+        top: 68%;
+        left: 81.5%;
         border-radius: 50%;
         padding: 5px;
         cursor: pointer;
@@ -730,11 +736,17 @@ header {
         display: flex;
         align-items: center;
         font-size: 16px;
+        white-space: nowrap; /* Prevent text wrapping */
     }
 
     .feature-icon i {
-        margin-right: 10px;
-        font-size: 20px;
+        margin-left: -40px;
+        font-size: 30px;
+    }
+
+        .categories-lg {
+            display: inline-block;
+        }
     }
 
 
