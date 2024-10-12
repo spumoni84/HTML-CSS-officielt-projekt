@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Administration</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <nav>
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="cart.html">Cart</a></li>
+                <li><a href="administration.html">Administration</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <h1>Administration</h1>
+        <h2>Products</h2>
+        <div class="admin-content">
+            <div class="button-container">
+                <a href="val-godkand.html" class="add-product">Add New Product</a>
+            </div>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Product Name</th>
+                        <th>SKU</th>
+                        <th>Price</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="productTableBody">
+                    <!-- Example product rows -->
+                </tbody>
+            </table>
+        </div>
+    </main>
+
+    <footer>
+        <p>&copy; 2024 Freaky Fashion</p>
+    </footer>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const newProduct = JSON.parse(localStorage.getItem('newProduct'));
+            if (newProduct) {
+                const productTableBody = document.getElementById('productTableBody');
+                const newRow = document.createElement('tr');
+                newRow.innerHTML = `
+                    <td><a href="#" class="product-link">${newProduct.name}</a></td>
+                    <td>${newProduct.sku}</td>
+                    <td>${newProduct.price}</td>
+                    <td>
+                        <a href="#" class="edit"><i class="fas fa-edit"></i></a>
+                        <a href="#" class="delete"><i class="fas fa-trash-alt"></i></a>
+                    </td>
+                `;
+                productTableBody.appendChild(newRow);
+                localStorage.removeItem('newProduct');
+            }
+
+            // Add event listener for delete buttons
+            document.querySelectorAll('.delete').forEach(button => {
+                button.addEventListener('click', function(event) {
+                    event.preventDefault();
+                    const row = button.closest('tr');
+                    row.remove();
+                });
+            });
+
+            // Add event listener for product links
+            document.querySelectorAll('.product-link').forEach(link => {
+                link.addEventListener('click', function(event) {
+                    event.preventDefault();
+                    const row = link.closest('tr');
+                    const productDetails = {
+                        name: row.cells[0].textContent,
+                        sku: row.cells[1].textContent,
+                        price: row.cells[2].textContent,
+                        description: row.cells[3].textContent,
+                        publishDate: row.cells[4].textContent,
+                        category: row.cells[5].textContent,
+                        image: row.cells[6].textContent
+                    };
+                    localStorage.setItem('productDetails', JSON.stringify(productDetails));
+                    window.location.href = 'product.html';
+                });
+            });
+        });
+    </script>
+</body>
+</html>

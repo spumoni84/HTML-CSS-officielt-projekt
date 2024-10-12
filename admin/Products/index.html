@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Administration</title>
+    <link rel="stylesheet" href="../../styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            margin: 0;
+        }
+        header, footer {
+            background-color: #333;
+            color: white;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        .main-content {
+            display: flex;
+            flex-grow: 1;
+        }
+        .sidebar {
+            width: 200px;
+            background-color: #f0f0f0;
+            padding: 20px;
+            box-shadow: 2px 0 5px rgba(0,0,0,0.1);
+        }
+        .content {
+            flex-grow: 1;
+            padding: 20px;
+        }
+        .button-container {
+            text-align: right;
+            margin-bottom: 20px;
+        }
+        .add-product-btn {
+            padding: 10px 20px;
+            background-color: #28a745;
+            color: #ffffff;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+            border-radius: 5px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: background-color 0.3s ease, box-shadow 0.3s ease;
+            display: flex;
+            align-items: center;
+        }
+        .add-product-btn i {
+            margin-right: 8px;
+        }
+        .add-product-btn:hover {
+            background-color: #218838;
+            box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            padding: 10px;
+            border: 1px solid #ddd;
+        }
+        th {
+            background-color: #f4f4f4;
+        }
+        .actions a {
+            margin-right: 5px;
+            color: #333;
+        }
+        .actions .edit {
+            color: green;
+        }
+        .actions .delete {
+            color: red;
+        }
+        .actions a:hover {
+            opacity: 0.7;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Administration</h1>
+    </header>
+    <div class="main-content">
+        <div class="sidebar">
+            <h2>Produkter</h2>
+        </div>
+        <div class="content">
+            <main>
+                <div class="button-container">
+                    <button class="add-product-btn" onclick="window.location.href='new.html'">
+                        <i class="fas fa-plus"></i> Ny produkt
+                    </button>
+                </div>
+                <h2>Produkter</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>SKU</th>
+                            <th>Price</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="productTableBody">
+                        <!-- Product rows will be dynamically generated here -->
+                    </tbody>
+                </table>
+            </main>
+        </div>
+    </div>
+    <footer>
+        <p>&copy; 2024 Your Company</p>
+    </footer>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Example products
+            const exampleProducts = [
+                { name: 'Hoodie', sku: 'AAA001', price: 25.99 },
+                { name: 'Sneakers', sku: 'AAB002', price: 45.99 },
+                { name: 'Backpack', sku: 'AAC003', price: 35.99 }
+            ];
+
+            // Retrieve products from localStorage or use example products
+            const products = JSON.parse(localStorage.getItem('products')) || exampleProducts;
+
+            // Function to generate product rows
+            function generateProductRows(products) {
+                const tbody = document.getElementById('productTableBody');
+                tbody.innerHTML = ''; // Clear existing rows
+
+                products.forEach(product => {
+                    const row = document.createElement('tr');
+
+                    row.innerHTML = `
+                        <td>${product.name}</td>
+                        <td>${product.sku}</td>
+                        <td>$${product.price}</td>
+                        <td class="actions">
+                            <a href="#" class="edit"><i class="fas fa-edit"></i></a>
+                            <a href="#" class="delete"><i class="fas fa-trash-alt"></i></a>
+                        </td>
+                    `;
+
+                    tbody.appendChild(row);
+                });
+
+                // Add event listener for delete buttons
+                document.querySelectorAll('.delete').forEach(button => {
+                    button.addEventListener('click', function(event) {
+                        event.preventDefault();
+                        const row = button.closest('tr');
+                        const sku = row.cells[1].textContent;
+
+                        // Remove product from localStorage
+                        const updatedProducts = products.filter(product => product.sku !== sku);
+                        localStorage.setItem('products', JSON.stringify(updatedProducts));
+
+                        // Remove row from DOM
+                        row.remove();
+                    });
+                });
+
+                // Add event listener for edit buttons
+                document.querySelectorAll('.edit').forEach(button => {
+                    button.addEventListener('click', function(event) {
+                        event.preventDefault();
+                        const row = button.closest('tr');
+                        const productDetails = {
+                            name: row.cells[0].textContent,
+                            sku: row.cells[1].textContent,
+                            price: row.cells[2].textContent,
+                        };
+                        localStorage.setItem('productDetails', JSON.stringify(productDetails));
+                        window.location.href = 'product.html';
+                    });
+                });
+            }
+
+            // Function to validate SKU format
+            function isValidSKU(sku) {
+                const skuPattern = /^[A-Z]{3}\d{3}$/;
+                return skuPattern.test(sku);
+            }
+
+            // Generate product rows on page load
+            generateProductRows(products);
+        });
+    </script>
+</body>
+</html>

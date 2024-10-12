@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>New Product</title>
+    <link rel="stylesheet" href="../../styles.css">
+    <style>
+        .error-message {
+            color: red;
+            display: none;
+        }
+        .success-message {
+            color: green;
+            display: none;
+        }
+        .char-count {
+            font-size: 0.9em;
+            color: gray;
+        }
+        .tooltip {
+            position: absolute;
+            background-color: #333;
+            color: #fff;
+            padding: 5px;
+            border-radius: 5px;
+            font-size: 0.8em;
+            display: none;
+            z-index: 1000;
+        }
+        .sidebar {
+            background-color: #f0f0f0;
+            padding: 20px;
+            width: 200px;
+            float: left;
+            height: 100vh;
+        }
+        .content {
+            margin-left: 220px;
+            padding: 20px;
+        }
+        header {
+            background-color: #333;
+            color: #fff;
+            padding: 10px;
+            text-align: center;
+        }
+        footer {
+            background-color: #333;
+            color: #fff;
+            text-align: center;
+            padding: 10px;
+            position: fixed;
+            width: 100%;
+            bottom: 0;
+        }
+        form {
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        input[type="text"],
+        input[type="number"],
+        input[type="date"],
+        input[type="file"],
+        select,
+        textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        textarea {
+            resize: vertical;
+            height: 100px;
+        }
+        button.submit-btn {
+            background-color: #333;
+            color: #fff;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button.submit-btn:hover {
+            background-color: #555;
+        }
+        .back-link {
+            display: block;
+            margin-top: 20px;
+            text-align: center;
+            color: #333;
+            text-decoration: none;
+        }
+        .back-link:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Administration</h1>
+    </header>
+    <div class="main-content">
+        <div class="sidebar">
+            <h2>Produkter</h2>
+        </div>
+        <div class="content">
+            <main>
+                <form id="productForm">
+                    <div class="form-group">
+                        <label for="productName">Product Name:</label>
+                        <input type="text" id="productName" name="productName" maxlength="50" required>
+                        <div id="productNameError" class="error-message">Product name cannot exceed 50 characters.</div>
+                        <div id="productNameCount" class="char-count">0/50</div>
+                    </div>
+                    <div class="form-group">
+                        <label for="productSKU">Product SKU:</label>
+                        <input type="text" id="productSKU" name="productSKU" required>
+                        <div id="skuTooltip" class="tooltip">Format: XXXYYY</div>
+                        <div id="productSKUError" class="error-message">SKU format is incorrect. It should be in the format XXXYYY where X is a letter and Y is a digit.</div>
+                    </div>
+                    <div class="form-group">
+                        <label for="productPrice">Product Price:</label>
+                        <input type="number" id="productPrice" name="productPrice" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="productDescription">Product Description:</label>
+                        <textarea id="productDescription" name="productDescription" required></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="publishDate">Publish Date:</label>
+                        <input type="date" id="publishDate" name="publishDate" required>
+                        <div id="publishDateError" class="error-message">Publish date cannot be in the past.</div>
+                    </div>
+                    <div class="form-group">
+                        <label for="productCategory">Category:</label>
+                        <select id="productCategory" name="productCategory" required>
+                            <option value="T-shirt">T-shirt</option>
+                            <option value="Summer clothes">Summer clothes</option>
+                            <option value="Pants">Pants</option>
+                            <option value="Shoes">Shoes</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="productImage">Image:</label>
+                        <input type="file" id="productImage" name="productImage" accept=".jpg, .jpeg, .png, .gif, .bmp, .webp" required>
+                        <div id="productImageError" class="error-message">Image is required.</div>
+                    </div>
+                    <button type="submit" class="submit-btn">Save Product</button>
+                </form>
+                <div id="successMessage" class="success-message">Product saved successfully!</div>
+                <a href="../../admin/products/index.html" class="back-link">Back to Administration</a>
+            </main>
+        </div>
+    </div>
+    <footer>
+        <p>&copy; 2024 Freaky Fashion</p>
+    </footer>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const productNameInput = document.getElementById('productName');
+            const productNameCount = document.getElementById('productNameCount');
+            const productNameError = document.getElementById('productNameError');
+            const publishDateInput = document.getElementById('publishDate');
+            const publishDateError = document.getElementById('publishDateError');
+            const productSKUInput = document.getElementById('productSKU');
+            const productSKUError = document.getElementById('productSKUError');
+            const skuTooltip = document.getElementById('skuTooltip');
+
+            productNameInput.addEventListener('input', function() {
+                const currentLength = productNameInput.value.length;
+                productNameCount.textContent = `${currentLength}/50`;
+
+                if (currentLength > 50) {
+                    productNameError.style.display = 'block';
+                } else {
+                    productNameError.style.display = 'none';
+                }
+            });
+
+            productSKUInput.addEventListener('mouseover', function(event) {
+                skuTooltip.style.display = 'block';
+                skuTooltip.style.left = event.pageX + 'px';
+                skuTooltip.style.top = (event.pageY - 30) + 'px';
+            });
+
+            productSKUInput.addEventListener('mouseout', function() {
+                skuTooltip.style.display = 'none';
+            });
+
+            document.getElementById('productForm').addEventListener('submit', function(event) {
+                event.preventDefault();
+
+                const productName = document.getElementById('productName').value;
+                const productSKU = document.getElementById('productSKU').value;
+                const productPrice = document.getElementById('productPrice').value;
+                const productDescription = document.getElementById('productDescription').value;
+                const publishDate = document.getElementById('publishDate').value;
+                const productCategory = document.getElementById('productCategory').value;
+                const productImage = document.getElementById('productImage').files[0];
+                const productImageError = document.getElementById('productImageError');
+
+                // Validate product name length
+                if (productName.length > 50) {
+                    productNameError.style.display = 'block';
+                    return;
+                } else {
+                    productNameError.style.display = 'none';
+                }
+
+                // Validate publish date
+                const currentDate = new Date().toISOString().split('T')[0];
+                if (publishDate < currentDate) {
+                    publishDateError.style.display = 'block';
+                    return;
+                } else {
+                    publishDateError.style.display = 'none';
+                }
+
+                // Validate product image
+                if (!productImage) {
+                    productImageError.style.display = 'block';
+                    return;
+                } else {
+                    productImageError.style.display = 'none';
+                }
+
+                // Validate SKU format
+                const skuFormat = /^[A-Z]{3}\d{3}$/;
+                if (!skuFormat.test(productSKU)) {
+                    productSKUError.style.display = 'block';
+                    return;
+                } else {
+                    productSKUError.style.display = 'none';
+                }
+
+                const newProduct = {
+                    name: productName,
+                    sku: productSKU,
+                    price: productPrice,
+                    description: productDescription,
+                    publishDate: publishDate,
+                    category: productCategory,
+                    image: productImage ? URL.createObjectURL(productImage) : ''
+                };
+
+                // Retrieve existing products from localStorage
+                const products = JSON.parse(localStorage.getItem('products')) || [];
+                products.push(newProduct);
+                localStorage.setItem('products', JSON.stringify(products));
+                
+                // Display success message
+                const successMessage = document.getElementById('successMessage');
+                successMessage.style.display = 'block';
+
+                // Optionally, redirect after a delay
+                setTimeout(() => {
+                    window.location.href = '../../admin/products/index.html';
+                }, 2000);
+            });
+        });
+    </script>
+</body>
+</html>
